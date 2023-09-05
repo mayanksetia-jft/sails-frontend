@@ -13,7 +13,17 @@ const Register = () => {
   const handleSubmit = async(e) =>{
     e.preventDefault();
     const user={name:fullname,email:email,password:password}
-    console.log(user)
+    const userCreation = await fetch('http://localhost:1337/register',{
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			mode: 'cors',
+			body: JSON.stringify({ user }),
+		})  
+    if(userCreation.ok){
+      navigate('/')
+    }
   }
 
   return (

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import basic from '../assets/basic.svg';
 import pro from '../assets/pro.svg';
 import business from '../assets/business.svg';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const data = [
 	{
@@ -24,10 +24,24 @@ const data = [
 		price: '999',
 	},
 ];
+
+// cs_test_a176oQWBWXiUNfetAKCP7kADkbRouGgX9NcO9U3TzPUWGcjpTBkauw28Gm
 const Home = () => {
-	const [userId, setUserId] = useState('1234'); //replace with userID from DB
+	const navigate = useNavigate()
+	const [userId, setUserId] = useState(''); //replace with userID from DB
 	const [userName, setUserName] = useState('');
 	const [planType, setPlanType] = useState('');
+
+	const handleSession = async() => {
+		const res = await fetch('http://localhost:1337/get-user')
+		const userData = await res.json()
+		setUserId(userData[0].id)
+		console.log('userData',userId)
+	  };
+
+	useEffect(()=>{
+		handleSession()
+	},[])
 
 	const checkout = (plan) => {
 		console.log('checkout')
@@ -53,6 +67,10 @@ const Home = () => {
 			});
 	};
 
+	const handleLogout=()=>{
+		navigate('/register')
+	}
+
 	return (
 		<>
 			<div className='flex flex-col items-center w-full mx-auto min-h-screen diagonal-background overflow-x-hidden'>
@@ -66,7 +84,7 @@ const Home = () => {
 						) : (
 							<div className='flex justify-center items-center space-x-4'>
 								<span className='text-white text-xl'>{userName}</span>
-								<button onClick={''} className='bg-white px-4 py-2 w-auto rounded-lg text-base uppercase font-semibold text-[#4f7cff]'>
+								<button onClick={()=>{handleLogout()}} className='bg-white px-4 py-2 w-auto rounded-lg text-base uppercase font-semibold text-[#4f7cff]'>
 									Logout
 								</button>
 							</div>
